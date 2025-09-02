@@ -21,4 +21,14 @@ router.get("/books", (req, res, next) => {
     });
 });
 
+router.get("/books/:bookId", (req, res) => {
+  const { bookId } = req.params;
+  Book.findById(bookId)
+    .then((theBook) => res.render("books/book-details.ejs", { book: theBook }))
+    .catch((error) => {
+      console.log("Error while retrieving book details", error);
+      next(error);
+    });
+});
+
 module.exports = router;
