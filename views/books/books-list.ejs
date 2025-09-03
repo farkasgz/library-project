@@ -5,5 +5,9 @@
   <h3><%= book.title %></h3>
   <p>By: <%= book.author %></p>
   <a href="/books/<%= book._id %>">See details</a>
+  <a href="/books/<%= book._id %>/edit">Edit</a>
+  <form action="/books/<%= book._id %>/delete" method="post">
+    <button>Delete</button>
+  </form>
 </div>
 <% }) %>

@@ -9,7 +9,7 @@ router.get("/books", (req, res, next) => {
   Book.find()
     .then((allTheBooksFromDB) => {
       // -> allTheBooksFromDB is a placeholder, it can be any word
-      console.log("Retrieved books from DB:", allTheBooksFromDB);
+      console.log("Retrieved books from DB:");
 
       res.render("books/books-list.ejs", { books: allTheBooksFromDB });
     })
@@ -27,6 +27,34 @@ router.post("/books/create", (req, res, next) => {
   const { title, author, description, rating } = req.body;
   Book.create({ title, author, description, rating })
     .then(() => res.redirect("/books"))
+    .catch((error) => next(error));
+});
+
+router.get("/books/:bookId/edit", (req, res, next) => {
+  const { bookId } = req.params;
+  Book.findById(bookId)
+    .then((bookToEdit) => {
+      res.render("books/book-edit.ejs", { book: bookToEdit });
+    })
+    .catch((error) => next(error));
+});
+
+router.post("/books/:bookId/edit", (req, res, next) => {
+  const { bookId } = req.params;
+  const { title, author, description, rating } = req.body;
+  Book.findByIdAndUpdate(
+    bookId,
+    { title, author, description, rating },
+    { new: true }
+  )
+    .then((updatedBook) => res.redirect(`/books/${updatedBook.id}`))
+    .catch((error) => next(error));
+});
+
+router.post("/books/:bookId/delete", (req, res, next) => {
+  const { bookId } = req.params;
+  Book.findByIdAndDelete(bookId)
+    .then(res.redirect("/books"))
     .catch((error) => next(error));
 });
 
